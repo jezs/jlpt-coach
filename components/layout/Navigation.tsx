@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BookOpen, BarChart2, Settings, Home } from "lucide-react";
+import { BookOpen, BarChart2, Settings, Home, PenSquare } from "lucide-react";
 
 const nav = [
   { href: "/", label: "Dashboard", icon: Home },
   { href: "/study", label: "Study", icon: BookOpen },
+  { href: "/quiz", label: "Quiz", icon: PenSquare },
   { href: "/analytics", label: "Analytics", icon: BarChart2 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

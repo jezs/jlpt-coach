@@ -177,13 +177,20 @@ export default function DashboardPage() {
           <h2 className="font-semibold">Today&apos;s study</h2>
           {data.todayDone && <Badge variant="success">✓ Done for today</Badge>}
         </div>
-        <Button asChild size="lg" className="w-full">
-          <Link href="/study">
-            <BookOpen className="h-5 w-5" />
-            {data.todayDone ? "Continue studying" : "Start 15-min session"}
-            <ChevronRight className="h-4 w-4 ml-auto" />
-          </Link>
-        </Button>
+        <div className="flex gap-3">
+          <Button asChild size="lg" className="flex-1">
+            <Link href="/study">
+              <BookOpen className="h-5 w-5" />
+              {data.todayDone ? "Continue studying" : "Start 15-min session"}
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline">
+            <Link href="/quiz">
+              <span className="text-base">📝</span>
+              Quiz
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-3">
