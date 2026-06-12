@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  anthropicApiKey String?
+  studyGoalDays   Int      @default(365)
+  dailyMinutes    Int      @default(15)
+
+  studyItems      StudyItem[]
+  sessions        StudySession[]
+  weaknessReports WeaknessReport[]
+
+  @@map("users")
+}
+
+model StudyItem {
+  id             String    @id @default(cuid())
+  userId         String
+  category       Category
+  itemKey        String
+  content        Json
+  easeFactor     Float     @default(2.5)
+  interval       Int       @default(1)
+  repetitions    Int       @default(0)
+  nextReview     DateTime  @default(now())
+  lastReview     DateTime?
+  correctStreak  Int       @default(0)
+  totalReviews   Int       @default(0)
+  correctReviews Int       @default(0)
+
+  user      User           @relation(fields: [userId], references: [id])
+  responses ItemResponse[]
+
+  @@unique([userId, itemKey])
+  @@index([userId, nextReview])
+  @@index([userId, category])
+  @@map("study_items")
+}
+
+model ItemResponse {
+  id          String   @id @default(cuid())
+  studyItemId String
+  sessionId   String
+  quality     Int
+  timeMs      Int
+  createdAt   DateTime @default(now())
+
+  studyItem StudyItem    @relation(fields: [studyItemId], references: [id])
+  session   StudySession @relation(fields: [sessionId], references: [id])
+
+  @@index([studyItemId])
+  @@index([sessionId])
+  @@map("item_responses")
+}
+
+model StudySession {
+  id           String    @id @default(cuid())
+  userId       String
+  startedAt    DateTime  @default(now())
+  endedAt      DateTime?
+  durationMs   Int?
+  category     Category?
+  itemsStudied Int       @default(0)
+  correctCount Int       @default(0)
+  aiSuggested  Boolean   @default(false)
+  notes        String?
+
+  user      User           @relation(fields: [userId], references: [id])
+  responses ItemResponse[]
+
+  @@index([userId, startedAt])
+  @@map("study_sessions")
+}
+
+model WeaknessReport {
+  id        String   @id @default(cuid())
+  userId    String
+  createdAt DateTime @default(now())
+  report    Json
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("weakness_reports")
+}
+
+enum Category {
+  VOCABULARY
+  GRAMMAR
+  KANJI
+  READING
+}
