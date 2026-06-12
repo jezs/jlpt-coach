@@ -207,8 +207,9 @@ function QuizSessionInner() {
 
       <Progress value={progress} className="h-1.5" />
 
-      {/* Question card */}
+      {/* Question card — key resets revealed state on each new question */}
       <JLPTQuestionCard
+        key={q.id}
         question={q}
         questionNumber={currentIndex + 1}
         totalQuestions={questions.length}
